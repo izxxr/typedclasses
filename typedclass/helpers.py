@@ -10,8 +10,33 @@ if typing.TYPE_CHECKING:
 
     TC = typing.TypeVar("TC", bound="TypedClass")
 
-def is_valid(val: typing.Any, tp: type):
-    return isinstance(val, tp)
+def apply_from_typing_origin(origin, tc: TypedClass, val: typing.Any, tp: type, name: str):
+    args = typing.get_args(tp)
+
+    if origin is typing.Union and args[1] is type(None):
+        # typing.Optional[tp] is used which is internally taken
+        # as typing.Union[tp, None] so args[0] would be our required type.
+        if val is None:
+            return True
+
+        if not isinstance(val, args[0]):
+            raise TypeError(f"Parameter {name!r} in {tc.__class__.__name__}() must be None or " \
+                            f"{args[0]!r}, Not {val.__class__!r}")
+
+        return setattr(tc, name, val)
+
+def apply_attr(tc: TypedClass, val: typing.Any, tp: type, name: str):
+    origin = typing.get_origin(tp)
+
+    if origin is not None:
+        apply_from_typing_origin(origin, tc, val, tp, name)
+        return
+
+    if not isinstance(val, tp):
+        raise TypeError(f"Parameter {name!r} in {tc.__class__.__name__}() must be an " \
+                        f"instance of {tp!r}, Not {val.__class__!r}")
+
+    setattr(tc, name, val)
 
 def prepare_typed_instance(tc: TC, params: typing.Dict[str, typing.Any]) -> TC:
     options = tc.__tc_options__
@@ -26,13 +51,7 @@ def prepare_typed_instance(tc: TC, params: typing.Dict[str, typing.Any]) -> TC:
             missing_params.append(p_name)
             continue
 
-        val = params[p_name]
-
-        if not is_valid(val, p_type):
-            raise TypeError(f"Parameter {p_name!r} in {tc.__class__.__name__}() must be an " \
-                            f"instance of {p_type!r}, Not {val.__class__!r}")
-
-        setattr(tc, p_name, val)
+        apply_attr(tc, params[p_name], p_type, p_name)
         params.pop(p_name)
 
 
@@ -44,12 +63,7 @@ def prepare_typed_instance(tc: TC, params: typing.Dict[str, typing.Any]) -> TC:
         if not p_name in params:
             continue
 
-        val = params[p_name]
-        if not is_valid(val, p_type):
-            raise TypeError(f"Parameter {p_name!r} in {tc.__class__.__name__}() must be an " \
-                            f"instance of {p_type!r}, Not {val.__class__!r}")
-
-        setattr(tc, p_name, val)
+        apply_attr(tc, params[p_name], p_type, p_name)
         params.pop(p_name)
 
     if params:
