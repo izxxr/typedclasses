@@ -42,4 +42,14 @@ Foo(x=1) # ok
 Foo(x=True) # invalid
 ```
 
-List of all types supported from `typing` module can be found in the documentation.
+List of all types supported from `typing` module can be found in the [documentation](https://github.com/nerdguyahmad/typedclasses/wiki).
+
+## Contribute
+You can contribute to the library in two ways:
+
+- Directly contributing to code using pull requests.
+- Suggest features or report bugs via issues.
+
+We welcome all contributions! 👍
+
+When using issues, Please be descriptive about your issue and for pull requests, Try to be consistent with current design.
