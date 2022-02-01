@@ -13,17 +13,34 @@ if typing.TYPE_CHECKING:
 def apply_from_typing_origin(origin, tc: TypedClass, val: typing.Any, tp: type, name: str):
     args = typing.get_args(tp)
 
-    if origin is typing.Union and args[1] is type(None):
+    if origin is typing.Union and args[1] is type(None) and len(args) == 2:
         # typing.Optional[tp] is used which is internally taken
         # as typing.Union[tp, None] so args[0] would be our required type.
-        if val is None:
-            return True
 
-        if not isinstance(val, args[0]):
+        if val is not None and not isinstance(val, args[0]):
             raise TypeError(f"Parameter {name!r} in {tc.__class__.__name__}() must be None or " \
                             f"{args[0]!r}, Not {val.__class__!r}")
 
         return setattr(tc, name, val)
+
+    elif origin is typing.Union:
+        for arg in args:
+            origin = typing.get_origin(arg)
+
+            if origin is not None:
+                try:
+                    apply_from_typing_origin(origin, tc, val, arg, name)
+                except TypeError:
+                    continue
+                else:
+                    return
+
+            if isinstance(val, arg):
+                setattr(tc, name, val)
+                return
+
+        raise TypeError(f"Parameter {name!r} in {tc.__class__.__name__}() must be an instance " \
+                        f"of one of {', '.join(repr(arg) for arg in args)}, Not {val.__class__!r}")
 
 def apply_attr(tc: TypedClass, val: typing.Any, tp: type, name: str):
     origin = typing.get_origin(tp)
