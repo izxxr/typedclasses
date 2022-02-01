@@ -5,13 +5,13 @@ with open("README.MD", "r") as f:
     LONG_DESCRIPTION = f.read()
 
 VERSION = "0.0.1"
-GITHUB = "https://github.com/nerdguyahmad/typed-class"
+GITHUB = "https://github.com/nerdguyahmad/typedclasses"
 LICENSE = "MIT"
 REQUIREMENTS = []
-PACKAGES = ["typedclass"]
+PACKAGES = ["typedclasses"]
 
 setup(
-    name="typed-class",
+    name="typedclasses",
     author="nerdguyahmad",
     version=VERSION,
     license=LICENSE,

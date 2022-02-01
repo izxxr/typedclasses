@@ -10,4 +10,4 @@ __license__ = "MIT"
 __github__  = "https://github.com/nerdguyahmad/typed-class"
 __author__  = "nerdguyahmad <nerdguyahmad.contact@gmail.com>"
 
-from typedclass.core import *
+from typedclasses.core import *

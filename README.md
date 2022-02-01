@@ -1,20 +1,20 @@
-# typed-class
+# typedclasses
 Python classes with types validation at runtime. ***(Experimental & Under Development)***
 
 ## Installation
 You can install this library using Python's favorite, `pip` package manager.
 
 ```sh
-pip install -U typed-class
+pip install -U typedclasses
 ```
 
 ## How it works
-Using typedclass, you can create classes in `dataclasses`-like manner i.e using type annotations and library will enforce types for
+Using typedclasses, you can create classes in `dataclasses`-like manner i.e using type annotations and library will enforce types for
 that class at runtime. Here's an example:
 
 ```py
 import typing
-from typedclass import TypedClass
+from typedclasses import TypedClass
 
 class User(TypedClass):
   id: int
