@@ -11,6 +11,28 @@ TC = typing.TypeVar("TC", bound="TypedClass")
 class TypedClass:
     """Represents a typed class that provides type validation at runtime.
 
+    Example::
+
+        class User(typedclass.TypedClass):
+            id: int
+            name: str
+            email: typing.Optional[str] = None # default value is set so this is optional.
+
+        >>> User(id=1, name='foo') # ok
+        >>> User(id='1', name='foo')
+        TypeError: Parameter 'id' in User() must be an instance of <class 'int'>, Not <class 'str'>
+
+    Following generic classes from :py-module:`typing` are also supported
+    and properly validated by this class:
+
+    - :py-class:`typing.Optional`
+    - :py-class:`typing.Union`
+    - :py-class:`typing.Type`
+    - :py-class:`typing.Literal`
+
+    Support for other generic types will also be added soon. If you want to suggest
+    one, Consider opening an issue on our GitHub repository!
+
     Subclassing Parameters
     ----------------------
     ignore_internal: :class:`builtins.bool`
