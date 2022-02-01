@@ -2,7 +2,7 @@
 Python classes with types validation at runtime. ***(Experimental & Under Development)***
 
 ## Installation
-You can install this library using Python's favorite, `pip` package manager. 
+You can install this library using Python's favorite, `pip` package manager.
 
 ```sh
 pip install -U typed-class
@@ -35,11 +35,11 @@ This library also provides validation for *various* generic types from `typing` 
 
 ```py
 class Foo(TypedClass):
-  str_or_int: typing.Union[str, int]
-  
-Foo("a") # ok
-Foo(1) # ok
-Foo(True) # invalid
+  x: typing.Union[str, int]
+
+Foo(x="a") # ok
+Foo(x=1) # ok
+Foo(x=True) # invalid
 ```
 
 List of all types supported from `typing` module can be found in the documentation.
