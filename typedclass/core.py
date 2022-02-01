@@ -9,7 +9,7 @@ import typing
 TC = typing.TypeVar("TC", bound="TypedClass")
 
 class TypedClass:
-    """Represents a typed class that provides type validation at runtime.
+    """Represents a typed class that provides robust type validation at runtime.
 
     Example::
 
@@ -38,6 +38,9 @@ class TypedClass:
     ignore_internal: :class:`builtins.bool`
         Whether to ignore the annotations starting with single underscore.
         Defaults to ``True``.
+    ignore_extra: :class:`builtins.bool`
+        Whether to ignore extra keyword parameters passed during initialization.
+        Defaults to ``False``.
     """
 
     __tc_options__: typing.Dict[str, typing.Any]
@@ -49,8 +52,11 @@ class TypedClass:
         instance = super().__new__(cls)
         return prepare_typed_instance(instance, kwargs)
 
-    def __init_subclass__(cls, ignore_internal: bool = True) -> None:
+    def __init_subclass__(cls, ignore_internal: bool = True, ignore_extra: bool = False) -> None:
         cls.__tc_options__ = options = dict()
+
+        # Passing parameters to options
+        options["ignore_extra"] = ignore_extra
 
         optional_params = options.get("optional_params", dict())
         required_params = options.get("required_params", dict())
@@ -176,7 +182,7 @@ def prepare_typed_instance(tc: TC, params: typing.Dict[str, typing.Any]) -> TC:
         apply_attr(tc, params[p_name], p_type, p_name)
         params.pop(p_name)
 
-    if params:
+    if params and not options.get("ignore_extra", False):
         raise TypeError(f"{tc.__class__.__name__}() got unexpected parameters " \
                         f"{', '.join(repr(p) for p in params)}")
 
