@@ -35,11 +35,11 @@ This library also provides validation for *various* generic types from `typing` 
 
 ```py
 class Foo(TypedClass):
-  x: typing.Union[str, int]
+  x: typing.Union[int, float]
 
-Foo(x="a") # ok
 Foo(x=1) # ok
-Foo(x=True) # invalid
+Foo(x=1.0) # ok
+Foo(x="1") # invalid
 ```
 
 List of all types supported from `typing` module can be found in the [documentation](https://github.com/nerdguyahmad/typedclasses/wiki).
