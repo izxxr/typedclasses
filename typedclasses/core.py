@@ -163,7 +163,7 @@ def prepare_typed_instance(tc: TC, params: typing.Dict[str, typing.Any]) -> TC:
     missing_params = []
 
     for p_name, p_type in required_params.items():
-        if not p_name in params:
+        if p_name not in params:
             missing_params.append(p_name)
             continue
 
@@ -176,7 +176,7 @@ def prepare_typed_instance(tc: TC, params: typing.Dict[str, typing.Any]) -> TC:
                         f"{', '.join(repr(p) for p in missing_params)}")
 
     for p_name, p_type in optional_params.items():
-        if not p_name in params:
+        if p_name not in params:
             continue
 
         apply_attr(tc, params[p_name], p_type, p_name)
