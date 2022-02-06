@@ -18,7 +18,7 @@ setup(
     url=GITHUB,
     project_urls={
         "Documentation": GITHUB + "/wiki",
-        "Issue tracker": GITHUB + "/issues",
+        "Issue tracker": f'{GITHUB}/issues',
     },
     description='Python classes with types validation at runtime.',
     long_description=LONG_DESCRIPTION,
@@ -40,5 +40,5 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities',
         'Typing :: Typed',
-    ]
+    ],
 )
