@@ -134,11 +134,14 @@ def apply_from_typing_origin(origin, tc: TypedClass, val: typing.Any, tp: type, 
         raise TypeError(f"Parameter {name!r} in {tc.__class__.__name__}() must be exactly one " \
                         f"of {', '.join(repr(arg) for arg in args)}, Not {val!r}")
 
-    elif origin is type:
+    elif origin is type: # typing.Type
         if not inspect.isclass(val) or not issubclass(val, args[0]):
             raise TypeError(f"Parameter {name!r} in {tc.__class__.__name__}() must be a type "
                             f"instance of {args[0]!r}, Not {val!r}")
 
+        setattr(tc, name, val)
+    else:
+        # unsupported origin, ignore it.
         setattr(tc, name, val)
 
 def apply_attr(tc: TypedClass, val: typing.Any, tp: type, name: str):
@@ -148,7 +151,11 @@ def apply_attr(tc: TypedClass, val: typing.Any, tp: type, name: str):
         apply_from_typing_origin(origin, tc, val, tp, name)
         return
 
-    if not isinstance(val, tp):
+    if tp is typing.Any:
+        setattr(tc, name, val)
+        return
+
+    elif not isinstance(val, tp):
         raise TypeError(f"Parameter {name!r} in {tc.__class__.__name__}() must be an " \
                         f"instance of {tp!r}, Not {val.__class__!r}")
 
