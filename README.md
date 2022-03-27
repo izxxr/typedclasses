@@ -1,5 +1,7 @@
 # typedclasses
-Python classes with types validation at runtime. ***(Experimental & Under Development)***
+Python classes with types validation at runtime.
+
+This is purely an experiment, not meant for actual use.
 
 ## Installation
 You can install this library using Python's favorite, `pip` package manager.
